@@ -4,6 +4,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 const CreateTask = ({ modal, toggle, save }) => {
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,10 +17,20 @@ const CreateTask = ({ modal, toggle, save }) => {
   };
 
   const handleSave = () => {
+    if (taskName.trim() === "") {
+      setErrorMessage("Please enter a task name.");
+      return;
+    }
+
     let taskObj = {};
     taskObj["Name"] = taskName;
     taskObj["Description"] = description;
-    save(taskObj)
+    save(taskObj);
+
+    // Reset the input fields and error message after saving
+    setTaskName("");
+    setDescription("");
+    setErrorMessage("");
   };
 
   return (
@@ -47,6 +58,9 @@ const CreateTask = ({ modal, toggle, save }) => {
               name="description"
             ></textarea>
           </div>
+          {errorMessage && (
+            <div className="text-danger">{errorMessage}</div>
+          )}
         </form>
       </ModalBody>
       <ModalFooter>
